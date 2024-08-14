@@ -2,25 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-buildscript {
-    // https://kotlinlang.org/docs/releases.html#release-details
-    ext.kotlin_version = '1.9.25'
-    ext {
-        compileSdkVersion   = 34
-        targetSdkVersion    = 34
-        appCompatVersion    = "1.1.0"
-    }
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
 allprojects {
     repositories {
         google()
@@ -40,8 +21,8 @@ tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
 
-gradle.projectsEvaluated {
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-    }
-}
+// gradle.projectsEvaluated {
+//     tasks.withType(JavaCompile) {
+//         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+//     }
+// }
