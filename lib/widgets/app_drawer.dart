@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:git_setup/screens.dart';
 import 'package:gitjournal/account/login_screen.dart';
-import 'package:gitjournal/analytics/analytics.dart';
 import 'package:gitjournal/history/history_screen.dart';
 import 'package:gitjournal/iap/purchase_screen.dart';
 import 'package:gitjournal/l10n.dart';
@@ -122,8 +121,6 @@ class _AppDrawerState extends State<AppDrawer>
         onTap: () {
           Navigator.pop(context);
           Navigator.pushNamed(context, GitHostSetupScreen.routePath);
-
-          logEvent(Event.DrawerSetupGitHost);
         },
       );
     }
@@ -155,11 +152,6 @@ class _AppDrawerState extends State<AppDrawer>
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, PurchaseScreen.routePath);
-
-                logEvent(
-                  Event.PurchaseScreenOpen,
-                  parameters: {"from": "drawer"},
-                );
               },
             ),
           if (appConfig.experimentalAccounts)
@@ -213,8 +205,6 @@ class _AppDrawerState extends State<AppDrawer>
             onTap: () {
               Navigator.pop(context);
               Share.share('Checkout GitJournal https://gitjournal.io/');
-
-              logEvent(Event.DrawerShare);
             },
           ),
           if (Platform.isAndroid || Platform.isIOS)
@@ -229,7 +219,6 @@ class _AppDrawerState extends State<AppDrawer>
                 );
 
                 Navigator.pop(context);
-                logEvent(Event.DrawerRate);
               },
             ),
           _buildDrawerTile(
@@ -258,8 +247,6 @@ class _AppDrawerState extends State<AppDrawer>
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, SettingsScreen.routePath);
-
-                logEvent(Event.DrawerSettings);
               },
             ),
         ],

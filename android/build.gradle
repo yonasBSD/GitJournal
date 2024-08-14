@@ -3,7 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 buildscript {
-    ext.kotlin_version = '1.8.0'
+    // https://kotlinlang.org/docs/releases.html#release-details
+    ext.kotlin_version = '1.9.25'
     ext {
         compileSdkVersion   = 34
         targetSdkVersion    = 34

@@ -8,7 +8,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:function_types/function_types.dart';
-import 'package:gitjournal/analytics/analytics.dart';
 import 'package:gitjournal/error_reporting.dart';
 import 'package:gitjournal/iap/iap.dart';
 import 'package:gitjournal/iap/purchase_manager.dart';
@@ -269,7 +268,6 @@ class _PurchaseWidgetState extends State<PurchaseWidget> {
 
     if (err.isEmpty) {
       Log.i("Purchase Completed: $subStatus");
-      logEvent(Event.PurchaseScreenThankYou);
       Navigator.of(context).popAndPushNamed(PurchaseThankYouScreen.routePath);
       return;
     }

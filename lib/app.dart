@@ -7,14 +7,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:gitjournal/analytics/analytics.dart';
-import 'package:gitjournal/analytics/route_observer.dart';
 import 'package:gitjournal/app_router.dart';
 import 'package:gitjournal/change_notifiers.dart';
 import 'package:gitjournal/core/folder/notes_folder_config.dart';
 import 'package:gitjournal/core/link.dart';
 import 'package:gitjournal/core/views/note_links_view.dart';
-import 'package:gitjournal/error_reporting.dart';
 import 'package:gitjournal/iap/iap.dart';
 import 'package:gitjournal/l10n.dart';
 import 'package:gitjournal/logger/logger.dart';
@@ -87,17 +84,6 @@ class JournalApp extends StatefulWidget {
     var supportDir = await getApplicationSupportDirectory();
     var analyticsStorage = p.join(supportDir.path, 'analytics');
     await Directory(analyticsStorage).create(recursive: true);
-
-    var analytics = await Analytics.init(
-      pref: pref,
-      analyticsCallback: captureErrorBreadcrumb,
-      storagePath: analyticsStorage,
-    );
-
-    analytics.setUserProperty(
-      name: 'proMode',
-      value: appConfig.proMode.toString(),
-    );
   }
 
   final RepositoryManager repoManager;
@@ -326,7 +312,6 @@ class JournalAppState extends State<JournalApp> {
       darkTheme: Themes.fromName(settings.darkTheme),
       themeMode: themeMode,
       navigatorObservers: <NavigatorObserver>[
-        AnalyticsRouteObserver(),
         SentryNavigatorObserver(),
       ],
       initialRoute: initialRoute,

@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:function_types/function_types.dart';
 import 'package:git_setup/git_config.dart';
-import 'package:gitjournal/analytics/analytics.dart';
 import 'package:gitjournal/error_reporting.dart';
 import 'package:gitjournal/l10n.dart';
 import 'package:gitjournal/logger/logger.dart';
@@ -586,18 +585,10 @@ class GitHostSetupScreenState extends State<GitHostSetupScreen> {
       _removeRemote();
 
       setState(() {
-        logEvent(Event.GitHostSetupGitCloneError, parameters: {
-          'error': error,
-        });
         _gitCloneErrorMessage = error;
       });
       return;
     }
-
-    logEvent(
-      Event.GitHostSetupComplete,
-      parameters: _buildOnboardingAnalytics(),
-    );
 
     var storageConfig = context.read<StorageConfig>();
     var folderName = folderNameFromCloneUrl(_gitCloneUrl);
@@ -673,39 +664,9 @@ class GitHostSetupScreenState extends State<GitHostSetupScreen> {
     Log.d("GitHostSetupAutoConfigureComplete: " + e.toString());
     setState(() {
       _autoConfigureErrorMessage = e.toString();
-      logEvent(
-        Event.GitHostSetupError,
-        parameters: {
-          'errorMessage': _autoConfigureErrorMessage,
-        },
-      );
 
       logException(e, stacktrace);
     });
-  }
-
-  Map<String, String> _buildOnboardingAnalytics() {
-    var map = <String, String>{};
-
-    if (_gitCloneUrl.contains("github.com")) {
-      map["host_type"] = "GitHub";
-    } else if (_gitCloneUrl.contains("gitlab.org")) {
-      map["host_type"] = "GitLab.org";
-    } else if (_gitCloneUrl.contains("gitlab")) {
-      map["host_type"] = "GitLab";
-    }
-
-    var ch0 = _pageChoice[0] as PageChoice0;
-    map["provider_choice"] = ch0.toString().replaceFirst("PageChoice0.", "");
-
-    var ch1 = _pageChoice[1] as PageChoice1;
-    map["setup_manner"] = ch1.toString().replaceFirst("PageChoice1.", "");
-
-    map["key_generation"] = _keyGenerationChoice
-        .toString()
-        .replaceFirst("KeyGenerationChoice.", "");
-
-    return map;
   }
 }
 

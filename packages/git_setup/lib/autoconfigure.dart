@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:function_types/function_types.dart';
 import 'package:git_setup/git_config.dart';
-import 'package:gitjournal/analytics/analytics.dart';
 import 'package:gitjournal/error_reporting.dart';
 import 'package:gitjournal/l10n.dart';
 import 'package:gitjournal/logger/logger.dart';
@@ -120,13 +119,6 @@ class GitHostSetupAutoConfigurePageState
     Log.e("GitHostSetupAutoConfigure", ex: e, stacktrace: stacktrace);
     setState(() {
       errorMessage = widget.gitHostType.toString() + ": " + e.toString();
-      logEvent(
-        Event.GitHostSetupError,
-        parameters: <String, String>{
-          'errorMessage': errorMessage,
-        },
-      );
-
       logException(e, stacktrace);
     });
   }

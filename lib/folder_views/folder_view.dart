@@ -5,7 +5,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:gitjournal/analytics/analytics.dart';
 import 'package:gitjournal/app_router.dart';
 import 'package:gitjournal/core/folder/filtered_notes_folder.dart';
 import 'package:gitjournal/core/folder/notes_folder.dart';
@@ -461,7 +460,6 @@ class _FolderViewState extends State<FolderView> {
       IconButton(
         icon: const Icon(Icons.search),
         onPressed: () {
-          logEvent(Event.SearchButtonPressed);
           showSearch(
             context: context,
             delegate: NoteSearchDelegate(

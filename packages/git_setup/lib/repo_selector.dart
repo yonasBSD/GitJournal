@@ -6,7 +6,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:function_types/function_types.dart';
-import 'package:gitjournal/analytics/analytics.dart';
 import 'package:gitjournal/error_reporting.dart';
 import 'package:gitjournal/l10n.dart';
 import 'package:gitjournal/logger/logger.dart';
@@ -128,9 +127,6 @@ class GitHostSetupRepoSelectorState extends State<GitHostSetupRepoSelector> {
       Log.e("Ignore error as not mounted", ex: e, stacktrace: stacktrace);
     }
 
-    logEvent(Event.GitHostSetupError, parameters: {
-      'errorMessage': errorMessage,
-    });
     logException(e, stacktrace);
   }
 

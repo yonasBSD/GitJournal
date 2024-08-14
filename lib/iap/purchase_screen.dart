@@ -7,7 +7,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:gitjournal/analytics/analytics.dart';
 import 'package:gitjournal/iap/purchase_manager.dart';
 import 'package:gitjournal/iap/purchase_widget.dart';
 import 'package:gitjournal/iap/restore_purchase_button.dart';
@@ -105,7 +104,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
   }
 
   Future<bool> _onWillPop() async {
-    logEvent(Event.PurchaseScreenClose);
     return true;
   }
 }

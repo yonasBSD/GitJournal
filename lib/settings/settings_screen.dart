@@ -11,7 +11,6 @@ import 'package:gitjournal/l10n.dart';
 import 'package:gitjournal/logger/debug_screen.dart';
 import 'package:gitjournal/settings/bug_report.dart';
 import 'package:gitjournal/settings/settings_about.dart';
-import 'package:gitjournal/settings/settings_analyatics.dart';
 import 'package:gitjournal/settings/settings_editors.dart';
 import 'package:gitjournal/settings/settings_experimental.dart';
 import 'package:gitjournal/settings/settings_git.dart';
@@ -80,18 +79,6 @@ class SettingsScreen extends StatelessWidget {
               settings: const RouteSettings(
                 name: SettingsStorageScreen.routePath,
               ),
-            );
-            Navigator.push(context, route);
-          },
-        ),
-        SettingsTile(
-          iconData: FontAwesomeIcons.chartArea,
-          title: context.loc.settingsListAnalyticsTitle,
-          subtitle: context.loc.settingsListAnalyticsSubtitle,
-          onTap: () {
-            var route = MaterialPageRoute(
-              builder: (context) => const SettingsAnalytics(),
-              settings: const RouteSettings(name: SettingsAnalytics.routePath),
             );
             Navigator.push(context, route);
           },

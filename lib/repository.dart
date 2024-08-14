@@ -14,7 +14,6 @@ import 'package:dart_git/plumbing/git_hash.dart';
 import 'package:dart_git/plumbing/reference.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gitjournal/analytics/analytics.dart';
 import 'package:gitjournal/core/commit_message_builder.dart';
 import 'package:gitjournal/core/file/file_storage.dart';
 import 'package:gitjournal/core/file/file_storage_cache.dart';
@@ -124,23 +123,6 @@ class GitJournalRepo with ChangeNotifier {
       scope.setContexts('Settings', settings.toLoggableMap());
     });
 
-    logEvent(
-      Event.StorageConfig,
-      parameters: storageConfig.toLoggableMap()..addAll({'id': id}),
-    );
-    logEvent(
-      Event.FolderConfig,
-      parameters: folderConfig.toLoggableMap()..addAll({'id': id}),
-    );
-    logEvent(
-      Event.GitConfig,
-      parameters: gitConfig.toLoggableMap()..addAll({'id': id}),
-    );
-    logEvent(
-      Event.Settings,
-      parameters: settings.toLoggableMap()..addAll({'id': id}),
-    );
-
     var repoPath = await storageConfig.buildRepoPath(gitBaseDir);
     Log.i("Loading Repo at path $repoPath");
 
@@ -224,13 +206,6 @@ class GitJournalRepo with ChangeNotifier {
     _currentBranch = currentBranch;
 
     Log.i("Branch $_currentBranch");
-
-    // Makes it easier to filter the analytics
-    Analytics.instance?.setUserProperty(
-      name: 'onboarded',
-      value: remoteGitRepoConfigured.toString(),
-    );
-
     Log.i("Cache Directory: $cacheDir");
 
     _notesCache = NotesCache(
@@ -338,7 +313,6 @@ class GitJournalRepo with ChangeNotifier {
       return;
     }
 
-    logEvent(Event.RepoSynced);
     var attempt = SyncAttempt();
     attempt.add(SyncStatus.Pulling);
     syncAttempts.insert(0, attempt);
@@ -406,8 +380,6 @@ class GitJournalRepo with ChangeNotifier {
   }
 
   Future<void> createFolder(NotesFolderFS parent, String folderName) async {
-    logEvent(Event.FolderAdded);
-
     await _gitOpLock.synchronized(() async {
       var newFolderPath = p.join(parent.folderPath, folderName);
       var newFolder = NotesFolderFS(parent, newFolderPath, folderConfig);
@@ -426,8 +398,6 @@ class GitJournalRepo with ChangeNotifier {
   }
 
   Future<void> removeFolder(NotesFolderFS folder) async {
-    logEvent(Event.FolderDeleted);
-
     await _gitOpLock.synchronized(() async {
       Log.d("Got removeFolder lock");
       Log.d("Removing Folder: ${folder.folderPath}");
@@ -444,8 +414,6 @@ class GitJournalRepo with ChangeNotifier {
 
   Future<void> renameFolder(NotesFolderFS folder, String newFolderName) async {
     assert(!newFolderName.contains(p.separator));
-
-    logEvent(Event.FolderRenamed);
 
     await _gitOpLock.synchronized(() async {
       var oldFolderPath = folder.folderPath;
@@ -467,8 +435,6 @@ class GitJournalRepo with ChangeNotifier {
   Future<Note> renameNote(Note fromNote, String newFileName) async {
     assert(!newFileName.contains(p.separator));
     assert(fromNote.oid.isNotEmpty);
-
-    logEvent(Event.NoteRenamed);
 
     var toNote = fromNote.copyWithFileName(newFileName);
     if (io.File(toNote.fullFilePath).existsSync()) {
@@ -512,7 +478,6 @@ class GitJournalRepo with ChangeNotifier {
 
     var newNotes = <Note>[];
 
-    logEvent(Event.NoteMoved);
     await _gitOpLock.synchronized(() async {
       Log.d("Got moveNote lock");
 
@@ -543,7 +508,6 @@ class GitJournalRepo with ChangeNotifier {
 
   Future<Note> addNote(Note note) async {
     assert(note.oid.isEmpty);
-    logEvent(Event.NoteAdded);
 
     note = note.updateModified();
     note = await NoteStorage.save(note);
@@ -565,8 +529,6 @@ class GitJournalRepo with ChangeNotifier {
   void removeNote(Note note) => removeNotes([note]);
 
   Future<void> removeNotes(List<Note> notes) async {
-    logEvent(Event.NoteDeleted);
-
     await _gitOpLock.synchronized(() async {
       Log.d("Got removeNote lock");
 
@@ -590,8 +552,6 @@ class GitJournalRepo with ChangeNotifier {
   }
 
   Future<void> undoRemoveNote(Note note) async {
-    logEvent(Event.NoteUndoDeleted);
-
     await _gitOpLock.synchronized(() async {
       Log.d("Got undoRemoveNote lock");
 
@@ -608,8 +568,6 @@ class GitJournalRepo with ChangeNotifier {
   Future<Note> updateNote(Note oldNote, Note newNote) async {
     assert(oldNote.oid.isNotEmpty);
     assert(newNote.oid.isEmpty);
-
-    logEvent(Event.NoteUpdated);
 
     assert(oldNote.filePath == newNote.filePath);
     assert(oldNote.parent == newNote.parent);
